@@ -14,6 +14,11 @@
         .glass-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); border: 1px solid #F1F5F9; }
         .nav-pill { background: #FFFFFF; border: 1px solid #E2E8F0; padding: 4px; border-radius: 9999px; }
         .placeholder-dashed { border: 2px dashed #E2E8F0; border-radius: 2rem; }
+        .detail-row { border-bottom: 1px solid #F1F5F9; padding: 12px 0; display: flex; justify-content: space-between; font-size: 13px; }
+        
+        .suggestion-card { background: white; border: 1px solid #F1F5F9; border-radius: 1.25rem; padding: 1.5rem; transition: all 0.3s ease; }
+        .suggestion-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.05); }
+        .badge-save { background: #ECFDF5; color: #059669; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -22,6 +27,28 @@
     <script type="text/babel">
         const generateCityData = () => {
             const cities = {};
+            
+            // Centralized Base Prices
+            const BASE_PRICES = {
+                meal: 17.5,
+                midMeal: 120,
+                mcMeal: 40,
+                beer: 16,
+                cappuccino: 17.1,
+                milk: 5.28, // Default milk value used globally
+                eggs: 7.73,
+                chicken: 31.6,
+                meat: 57.8,
+                rent: 1655.5,
+                rentOutside: 1051.8,
+                utils: 390.4,
+                internet: 71.7,
+                gym: 137.5,
+                salary: 6507.2,
+                carCost: 545.0
+            };
+
+            // milkRate removed from the dataset
             const list = [
     {n: "Zurich, Switzerland", col: 125.7, rent: 74.8, pur: 163.8},
     {n: "Geneva, Switzerland", col: 121.3, rent: 66.9, pur: 160.1},
@@ -544,14 +571,48 @@
 list.sort((a, b) => a.n.localeCompare(b.n));
 
 
+
             list.forEach(item => {
+                const colRatio = item.col / 100;
+                const rentRatio = item.rent / 100;
+                const purRatio = item.pur / 100;
+                
+                // Calculated Milk Rate based on COL index instead of hardcoded value
+                const localMilkRate = BASE_PRICES.milk * colRatio;
+
                 cities[item.n.toLowerCase()] = {
                     name: item.n,
-                    rent: (item.rent / 100) * 2500,
-                    food: (item.col / 100) * 800,
-                    transport: (item.col / 100) * 150,
-                    utilities: (item.col / 100) * 200,
-                    risk: Math.round(item.pur > 100 ? 95 : item.pur * 0.9)
+                    rent: BASE_PRICES.rent * rentRatio,
+                    rentOutside: BASE_PRICES.rentOutside * rentRatio,
+                    food: (BASE_PRICES.meal * 10 * colRatio + localMilkRate * 15), 
+                    transport: 100 * colRatio,
+                    carCost: BASE_PRICES.carCost * colRatio,
+                    mealPrice: BASE_PRICES.meal * colRatio,
+                    utilities: BASE_PRICES.utils * colRatio,
+                    risk: Math.round(item.pur > 100 ? 95 : item.pur * 0.9),
+                    inventory: {
+                        "Restaurants": [
+                            { n: "Inexpensive Meal", v: BASE_PRICES.meal * colRatio },
+                            { n: "Mid-Range Meal (2 ppl)", v: BASE_PRICES.midMeal * colRatio },
+                            { n: "McMeal", v: BASE_PRICES.mcMeal * colRatio },
+                            { n: "Cappuccino", v: BASE_PRICES.cappuccino * colRatio }
+                        ],
+                        "Market/Groceries": [
+                            { n: "Milk (1L)", v: localMilkRate },
+                            { n: "Eggs (12 L)", v: BASE_PRICES.eggs * colRatio },
+                            { n: "Chicken Fillets (1kg)", v: BASE_PRICES.chicken * colRatio },
+                            { n: "Red Meat (1kg)", v: BASE_PRICES.meat * colRatio }
+                        ],
+                        "Utilities & Services": [
+                            { n: "Basic Utilities", v: BASE_PRICES.utils * colRatio },
+                            { n: "Internet", v: BASE_PRICES.internet * colRatio },
+                            { n: "Fitness Club", v: BASE_PRICES.gym * colRatio }
+                        ],
+                        "Real Estate & Salary": [
+                            { n: "1BR City Centre", v: BASE_PRICES.rent * rentRatio },
+                            { n: "Avg Net Salary", v: BASE_PRICES.salary * purRatio }
+                        ]
+                    }
                 };
             });
             return cities;
@@ -559,9 +620,84 @@ list.sort((a, b) => a.n.localeCompare(b.n));
 
         const CITY_DB = generateCityData();
 
+        const SmartSuggestions = ({ city }) => {
+            if (!city) return null;
+            const moveOutSaving = city.rent - city.rentOutside;
+            const transitSaving = city.carCost - city.transport;
+            const chefSaving = (city.mealPrice * 3) - ((city.mealPrice * 0.3) * 3);
+
+            return (
+                <div className="mt-12 space-y-6">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">💡</span>
+                        <h3 className="text-lg font-extrabold text-slate-800">Smart Budget Optimization</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="suggestion-card">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-2 bg-orange-50 rounded-lg">🏠</div>
+                                <span className="badge-save">SAVE ${Math.round(moveOutSaving)}/MO</span>
+                            </div>
+                            <h4 className="font-bold text-slate-800 mb-1">Move 15-min Out</h4>
+                            <p className="text-xs text-slate-500 mb-4">Rent drops significantly just outside the city center.</p>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                <div className="flex justify-between border-b border-slate-50 py-1"><span>Centre:</span> <span className="text-slate-700">${Math.round(city.rent)}</span></div>
+                                <div className="flex justify-between py-1"><span>Outside:</span> <span className="text-slate-700">${Math.round(city.rentOutside)}</span></div>
+                            </div>
+                        </div>
+
+                        <div className="suggestion-card">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-2 bg-blue-50 rounded-lg">🚌</div>
+                                <span className="badge-save">SAVE ${Math.round(transitSaving)}/MO</span>
+                            </div>
+                            <h4 className="font-bold text-slate-800 mb-1">Public Transit</h4>
+                            <p className="text-xs text-slate-500 mb-4">Switching from car ownership to a monthly pass.</p>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                <div className="flex justify-between border-b border-slate-50 py-1"><span>Car:</span> <span className="text-slate-700">${Math.round(city.carCost)}</span></div>
+                                <div className="flex justify-between py-1"><span>Pass:</span> <span className="text-slate-700">${Math.round(city.transport)}</span></div>
+                            </div>
+                        </div>
+
+                        <div className="suggestion-card">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="p-2 bg-purple-50 rounded-lg">🍳</div>
+                                <span className="badge-save">SAVE ${Math.round(chefSaving)}/MO</span>
+                            </div>
+                            <h4 className="font-bold text-slate-800 mb-1">Chef Mode</h4>
+                            <p className="text-xs text-slate-500 mb-4">Replacing 3 restaurant meals/week with home cooking.</p>
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                <div className="flex justify-between border-b border-slate-50 py-1"><span>Dining Out:</span> <span className="text-slate-700">${Math.round(city.mealPrice * 3)}</span></div>
+                                <div className="flex justify-between py-1"><span>Groceries:</span> <span className="text-slate-700">${Math.round((city.mealPrice * 0.3) * 3)}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const InventorySection = ({ data }) => (
+            <div className="mt-12 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <h3 className="text-xl font-black text-slate-800 border-l-4 border-blue-600 pl-4">Detailed Price Inventory: {data.name}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {Object.entries(data.inventory).map(([category, items]) => (
+                        <div key={category} className="glass-card p-6">
+                            <h4 className="text-[11px] font-black text-blue-500 uppercase tracking-widest mb-4">{category}</h4>
+                            {items.map((item, i) => (
+                                <div key={i} className="detail-row">
+                                    <span className="text-slate-600 font-medium">{item.n}</span>
+                                    <span className="font-bold text-slate-900">${(item.v).toFixed(2)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
         function App() {
             const [view, setView] = React.useState('single');
-            const [income, setIncome] = React.useState(5000);
+            const [income, setIncome] = React.useState(6500); 
             const [lifestyle, setLifestyle] = React.useState('Standard');
             const [cityA, setCityA] = React.useState("");
             const [cityB, setCityB] = React.useState("");
@@ -573,31 +709,26 @@ list.sort((a, b) => a.n.localeCompare(b.n));
                 if (!id) return null;
                 const city = CITY_DB[id];
                 const m = multipliers[lifestyle];
+                
                 const costs = {
-                    rent: Math.round(city.rent * m),
-                    food: Math.round(city.food * m),
-                    transport: Math.round(city.transport * (lifestyle === 'Minimalist' ? 0.4 : m)),
-                    utilities: Math.round(city.utilities)
+                    rent: city.rent * m,
+                    food: city.food * m,
+                    transport: city.transport * (lifestyle === 'Minimalist' ? 0.4 : m),
+                    utilities: city.utilities
                 };
                 const total = costs.rent + costs.food + costs.transport + costs.utilities;
-                return { ...costs, total, surplus: income - total, risk: city.risk, rawName: city.name };
+                return { ...costs, total, surplus: income - total, risk: city.risk, rawName: city.name, inventory: city.inventory, rawCity: city };
             };
 
             const dataA = getStats(cityA);
             const dataB = getStats(cityB);
-            const annualSavingsDiff = (dataA && dataB) ? Math.abs(dataA.surplus - dataB.surplus) * 12 : 0;
-
-            const handleAnalyze = () => {
-                if (cityA) setIsActive(true);
-            };
 
             return (
                 <div className="max-w-6xl mx-auto p-6 md:p-12">
-                    {/* Centered Header */}
                     <header className="flex flex-col items-center mb-12 text-center">
                         <div className="mb-6">
                             <h1 className="text-4xl font-extrabold text-[#2563EB] tracking-tight">ReloSmart<span className="text-slate-300">.ai</span></h1>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Relocation Intelligence System</p>
+                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Comprehensive Relocation Intelligence</p>
                         </div>
                         <div className="nav-pill flex shadow-sm">
                             <button onClick={() => {setView('single'); setIsActive(false);}} className={`px-8 py-2 rounded-full text-xs font-bold transition ${view === 'single' ? 'bg-[#2563EB] text-white' : 'text-slate-400'}`}>Single City</button>
@@ -606,104 +737,57 @@ list.sort((a, b) => a.n.localeCompare(b.n));
                     </header>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                        {/* Configuration Sidebar */}
                         <div className="lg:col-span-4 space-y-6">
                             <div className="glass-card p-8 space-y-6 border-t-4 border-blue-500">
-                                <h3 className="text-[14px] font-black uppercase text-slate-800 tracking-wider mb-8">Configuration</h3>
-                                
+                                <h3 className="text-[14px] font-black uppercase text-slate-800 tracking-wider">Configuration</h3>
                                 <div className="space-y-6">
-                                    <div>
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Target City</label>
-                                        <select value={cityA} onChange={(e) => {setCityA(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-sm font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-100 outline-none">
-                                            <option value="" disabled>e.g. London</option>
+                                    <select value={cityA} onChange={(e) => {setCityA(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 rounded-2xl text-sm font-bold appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                                        <option value="" disabled>Select Target City</option>
+                                        {Object.keys(CITY_DB).map(k => <option key={k} value={k}>{CITY_DB[k].name}</option>)}
+                                    </select>
+                                    {view === 'compare' && (
+                                        <select value={cityB} onChange={(e) => {setCityB(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 rounded-2xl text-sm font-bold appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                                            <option value="" disabled>Select Comparison City</option>
                                             {Object.keys(CITY_DB).map(k => <option key={k} value={k}>{CITY_DB[k].name}</option>)}
                                         </select>
-                                    </div>
-
-                                    {view === 'compare' && (
-                                        <div>
-                                            <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Comparison City</label>
-                                            <select value={cityB} onChange={(e) => {setCityB(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-sm font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-100 outline-none">
-                                                <option value="" disabled>Choose second city...</option>
-                                                {Object.keys(CITY_DB).map(k => <option key={k} value={k}>{CITY_DB[k].name}</option>)}
-                                            </select>
-                                        </div>
                                     )}
-
-                                    <button onClick={handleAnalyze} className="w-full py-4 bg-[#2563EB] text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] active:scale-95 transition-all">
-                                        Analyze Relocation
-                                    </button>
-
+                                    <button onClick={() => setIsActive(true)} className="w-full py-4 bg-[#2563EB] text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] transition-all">Analyze Detailed Costs</button>
                                     <div>
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Monthly Income</label>
-                                        <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                                            <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} className="w-full p-4 pl-8 bg-slate-50 border-none rounded-2xl text-lg font-black outline-none" />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Lifestyle Mode</label>
-                                        <div className="flex bg-slate-100 p-1 rounded-2xl">
-                                            {['Minimalist', 'Standard', 'Premium'].map(l => (
-                                                <button key={l} onClick={() => setLifestyle(l)} className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition ${lifestyle === l ? 'bg-white shadow-sm text-[#2563EB]' : 'text-slate-400'}`}>{l}</button>
-                                            ))}
-                                        </div>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Monthly Net Income ($)</label>
+                                        <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} className="w-full p-4 bg-slate-50 rounded-2xl text-lg font-black outline-none" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Main Results Dashboard */}
-                        <div className="lg:col-span-8 h-full">
+                        <div className="lg:col-span-8">
                             {!isActive ? (
-                                /* Placeholder/Empty State from Image */
-                                <div className="placeholder-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-center p-12">
-                                    <div className="mb-8 opacity-20">
-                                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="animate-pulse">
-                                            <path d="M12 3v3m0 12v3M5 12H2m20 0h-3M18.36 5.64l-2.12 2.12M7.76 16.24l-2.12 2.12M18.36 18.36l-2.12-2.12M7.76 7.76L5.64 5.64" strokeLinecap="round"/>
-                                            <circle cx="12" cy="12" r="4"/>
-                                            <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-3xl font-black text-slate-300 mb-2">Analysis Dashboard</h3>
-                                    <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">Activate Relocation Mode</p>
+                                <div className="placeholder-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-center p-12 opacity-40">
+                                    <h3 className="text-3xl font-black text-slate-300">Ready for Data Injection</h3>
                                 </div>
                             ) : (
-                                /* Results Dashboard */
-                                <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                                    {view === 'compare' && dataB && (
-                                        <div className="bg-[#10B981] text-white p-5 rounded-3xl text-center shadow-lg shadow-emerald-50">
-                                            <p className="font-bold text-sm">
-                                                Verdict: {dataB.surplus > dataA.surplus ? dataB.rawName : dataA.rawName} saves you ${annualSavingsDiff.toLocaleString()} more per year!
-                                            </p>
-                                        </div>
-                                    )}
-
-                                    <div className={`grid gap-6 ${view === 'compare' ? 'md:grid-cols-2' : 'max-w-2xl mx-auto w-full'}`}>
+                                <div className="space-y-6">
+                                    <div className={`grid gap-6 ${view === 'compare' ? 'md:grid-cols-2' : ''}`}>
                                         {[dataA, ...(view === 'compare' && dataB ? [dataB] : [])].map((city, idx) => (
-                                            <div key={idx} className="glass-card p-10 flex flex-col">
-                                                <div className="flex justify-between items-start mb-10">
-                                                    <div>
-                                                        <h2 className="text-3xl font-extrabold text-slate-800 mb-2">{city.rawName.split(',')[0]}</h2>
-                                                        <span className="bg-blue-50 text-[#2563EB] text-[10px] font-black px-3 py-1 rounded-full uppercase">Risk Score: {city.risk}/100</span>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Monthly Surplus</p>
-                                                        <p className={`text-4xl font-black ${city.surplus >= 0 ? 'text-[#10B981]' : 'text-rose-500'}`}>
-                                                            ${city.surplus.toLocaleString()}
-                                                        </p>
-                                                    </div>
+                                            <div key={idx} className="glass-card p-10">
+                                                <h2 className="text-2xl font-extrabold text-slate-800 mb-6">{city.rawName}</h2>
+                                                <div className="mb-8">
+                                                    <p className="text-[10px] font-bold text-slate-400 uppercase">Monthly Surplus</p>
+                                                    <p className={`text-4xl font-black ${city.surplus >= 0 ? 'text-[#10B981]' : 'text-rose-500'}`}>${Math.round(city.surplus).toLocaleString()}</p>
                                                 </div>
-                                                <div className="grid grid-cols-2 gap-y-10 gap-x-12">
+                                                <div className="space-y-6">
                                                     <StatItem label="Rent" val={city.rent} color="#3B82F6" total={city.total} />
                                                     <StatItem label="Food" val={city.food} color="#F59E0B" total={city.total} />
-                                                    <StatItem label="Transport" val={city.transport} color="#64748B" total={city.total} />
                                                     <StatItem label="Utilities" val={city.utilities} color="#94A3B8" total={city.total} />
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
+
+                                    {view === 'single' && <SmartSuggestions city={dataA.rawCity} />}
+                                    
+                                    <InventorySection data={dataA} />
+                                    {view === 'compare' && dataB && <InventorySection data={dataB} />}
                                 </div>
                             )}
                         </div>
@@ -714,18 +798,17 @@ list.sort((a, b) => a.n.localeCompare(b.n));
 
         const StatItem = ({ label, val, color, total }) => (
             <div>
-                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase mb-3">
+                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase mb-2">
                     <span>{label}</span>
-                    <span className="text-slate-800">${val.toLocaleString()}</span>
+                    <span className="text-slate-800">${Math.round(val).toLocaleString()}</span>
                 </div>
-                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                     <div className="h-full transition-all duration-1000" style={{width: `${(val/total)*100}%`, backgroundColor: color}}></div>
                 </div>
             </div>
         );
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
