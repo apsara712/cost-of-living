@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReloSmart.ai | Global Relocation Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; color: #1E293B; }
+        .glass-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); border: 1px solid #F1F5F9; }
+        .nav-pill { background: #FFFFFF; border: 1px solid #E2E8F0; padding: 4px; border-radius: 9999px; }
+        .placeholder-dashed { border: 2px dashed #E2E8F0; border-radius: 2rem; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const generateCityData = () => {
+            const cities = {};
+            const list = [
+    {n: "Zurich, Switzerland", col: 125.7, rent: 74.8, pur: 163.8},
+    {n: "Geneva, Switzerland", col: 121.3, rent: 66.9, pur: 160.1},
+    {n: "Basel, Switzerland", col: 116.6, rent: 49.6, pur: 183.2},
+    {n: "Lugano, Switzerland", col: 116.4, rent: 46.6, pur: 150.9},
+    {n: "Lausanne, Switzerland", col: 116.1, rent: 55.6, pur: 176.7},
+    {n: "George Town, Cayman Islands", col: 112.2, rent: 77.7, pur: 155.7},
+    {n: "Bern, Switzerland", col: 111.9, rent: 48.2, pur: 177.1},
+    {n: "Reykjavik, Iceland", col: 102.5, rent: 50.4, pur: 111.4},
+    {n: "Honolulu, HI, United States", col: 100.0, rent: 62.2, pur: 96.7},
+    {n: "New York, NY, United States", col: 100.0, rent: 100.0, pur: 100.0},
+    {n: "San Francisco, CA, United States", col: 97.3, rent: 78.7, pur: 159.5},
+    {n: "Oslo, Norway", col: 96.5, rent: 40.8, pur: 117.2},
+    {n: "Tel Aviv-Yafo, Israel", col: 96.3, rent: 47.1, pur: 110.4},
+    {n: "Trondheim, Norway", col: 92.9, rent: 30.9, pur: 126.8},
+    {n: "Bergen, Norway", col: 91.9, rent: 29.9, pur: 128.2},
+    {n: "London, United Kingdom", col: 91.2, rent: 70.9, pur: 115.8},
+    {n: "San Jose, CA, United States", col: 90.4, rent: 72.2, pur: 133.1},
+    {n: "Seattle, WA, United States", col: 90.4, rent: 60.6, pur: 165.4},
+    {n: "Washington, DC, United States", col: 90.1, rent: 69.3, pur: 146.6},
+    {n: "Singapore, Singapore", col: 90.1, rent: 67.7, pur: 105.5},
+    {n: "Stavanger, Norway", col: 89.5, rent: 38.7, pur: 138.2},
+    {n: "Charleston, SC, United States", col: 88.7, rent: 51.3, pur: 122.7},
+    {n: "Ramat Gan, Israel", col: 88.4, rent: 34.1, pur: 126.4},
+    {n: "Berkeley, CA, United States", col: 87.9, rent: 62.5, pur: 167.3},
+    {n: "Copenhagen, Denmark", col: 87.0, rent: 45.9, pur: 141.0},
+    {n: "Jerusalem, Israel", col: 86.6, rent: 40.3, pur: 112.3},
+    {n: "Boston, MA, United States", col: 86.0, rent: 76.5, pur: 156.7},
+    {n: "Amsterdam, Netherlands", col: 84.5, rent: 56.9, pur: 141.6},
+    {n: "Stockholm, Sweden", col: 83.7, rent: 37.1, pur: 120.4},
+    {n: "Oakland, CA, United States", col: 83.6, rent: 57.1, pur: 141.5},
+    {n: "Miami, FL, United States", col: 83.5, rent: 67.8, pur: 105.0},
+    {n: "Anchorage, AK, United States", col: 83.3, rent: 36.4, pur: 143.6},
+    {n: "Los Angeles, CA, United States", col: 83.3, rent: 68.2, pur: 106.9},
+    {n: "Haifa, Israel", col: 83.3, rent: 23.8, pur: 132.8},
+    {n: "San Diego, CA, United States", col: 83.0, rent: 72.9, pur: 135.7},
+    {n: "Pisa, Italy", col: 82.7, rent: 26.7, pur: 56.5},
+    {n: "Luxembourg, Luxembourg", col: 82.5, rent: 54.3, pur: 148.1},
+    {n: "Haarlem, Netherlands", col: 82.0, rent: 43.1, pur: 116.7},
+    {n: "Aalborg, Denmark", col: 81.9, rent: 22.2, pur: 164.8},
+    {n: "Aarhus, Denmark", col: 81.7, rent: 32.2, pur: 146.6},
+{n: "Arlington, VA, United States", col: 81.1, rent: 62.0, pur: 171.8},
+{n: "Paris, France", col: 80.8, rent: 41.9, pur: 123.3},
+{n: "Sydney, Australia", col: 80.7, rent: 56.2, pur: 115.1},
+{n: "Philadelphia, PA, United States", col: 80.3, rent: 43.4, pur: 131.8},
+{n: "Irvine, CA, United States", col: 79.8, rent: 67.6, pur: 150.0},
+{n: "Sacramento, CA, United States", col: 79.8, rent: 46.5, pur: 136.7},
+{n: "Petah Tikva, Israel", col: 79.7, rent: 29.3, pur: 128.8},
+{n: "Beersheba, Israel", col: 79.7, rent: 16.3, pur: 127.1},
+{n: "Utrecht, Netherlands", col: 79.0, rent: 43.1, pur: 145.5},
+{n: "Salzburg, Austria", col: 78.7, rent: 34.4, pur: 108.3},
+{n: "Munich, Germany", col: 78.3, rent: 44.0, pur: 149.2},
+{n: "Jersey City, NJ, United States", col: 78.2, rent: 70.7, pur: 148.5},
+{n: "Portland, OR, United States", col: 78.1, rent: 47.9, pur: 147.0},
+{n: "Espoo, Finland", col: 78.0, rent: 29.9, pur: 119.1},
+{n: "Guildford, United Kingdom", col: 78.0, rent: 42.5, pur: 117.6},
+{n: "Oxford, United Kingdom", col: 77.8, rent: 47.6, pur: 118.3},
+{n: "Odense, Denmark", col: 77.7, rent: 22.5, pur: 166.4},
+{n: "Dublin, Ireland", col: 77.6, rent: 59.9, pur: 120.0},
+{n: "New Orleans, LA, United States", col: 77.6, rent: 38.6, pur: 126.4},
+{n: "Canberra, Australia", col: 77.5, rent: 40.1, pur: 131.5},
+{n: "Vienna, Austria", col: 77.1, rent: 29.1, pur: 136.2},
+{n: "Milan, Italy", col: 77.0, rent: 41.7, pur: 73.5},
+{n: "Chicago, IL, United States", col: 76.9, rent: 56.4, pur: 144.7},
+{n: "Delft, Netherlands", col: 76.8, rent: 39.4, pur: 121.8},
+{n: "Brighton, United Kingdom", col: 76.8, rent: 42.0, pur: 113.2},
+{n: "Rotterdam, Netherlands", col: 76.7, rent: 41.9, pur: 131.0},
+{n: "Nice, France", col: 76.6, rent: 29.3, pur: 96.6},
+{n: "Melbourne, Australia", col: 76.6, rent: 42.1, pur: 137.3},
+{n: "Frankfurt, Germany", col: 76.6, rent: 33.2, pur: 165.8},
+{n: "Albany, NY, United States", col: 76.5, rent: 39.2, pur: 128.9},
+{n: "Fort Lauderdale, FL, United States", col: 76.5, rent: 58.1, pur: 126.5},
+{n: "The Hague (Den Haag), Netherlands", col: 76.2, rent: 43.5, pur: 147.2},
+{n: "Helsinki, Finland", col: 76.0, rent: 29.3, pur: 114.7},
+{n: "Denver, CO, United States", col: 75.9, rent: 47.3, pur: 138.7},
+{n: "Marseille, France", col: 75.8, rent: 21.6, pur: 103.6},
+{n: "Strasbourg, France", col: 75.8, rent: 22.6, pur: 115.7},
+{n: "Atlanta, GA, United States", col: 75.8, rent: 43.1, pur: 165.2},
+{n: "Wiesbaden, Germany", col: 75.5, rent: 23.8, pur: 132.3},
+{n: "Hong Kong, Hong Kong (China)", col: 75.4, rent: 58.2, pur: 92.9},
+{n: "Cambridge, United Kingdom", col: 75.3, rent: 46.7, pur: 132.2},
+{n: "Lyon, France", col: 75.2, rent: 22.7, pur: 124.0},
+{n: "Reno, NV, United States", col: 75.0, rent: 36.6, pur: 142.4},
+{n: "Heidelberg, Germany", col: 75.0, rent: 33.6, pur: 108.8},
+{n: "Colorado Springs, CO, United States", col: 75.0, rent: 39.5, pur: 137.5},
+{n: "Dusseldorf, Germany", col: 74.8, rent: 31.5, pur: 145.4},
+{n: "Dallas, TX, United States", col: 74.6, rent: 45.7, pur: 142.9},
+{n: "Edinburgh, United Kingdom", col: 74.4, rent: 37.8, pur: 125.0},
+{n: "Galway, Ireland", col: 74.1, rent: 51.0, pur: 95.4},
+{n: "Buffalo, NY, United States", col: 74.1, rent: 31.8, pur: 123.9},
+{n: "Gent, Belgium", col: 74.0, rent: 26.9, pur: 124.8},
+{n: "Minneapolis, MN, United States", col: 74.0, rent: 38.2, pur: 150.1},
+{n: "Gold Coast, Australia", col: 74.0, rent: 43.0, pur: 127.5},
+{n: "Brussels, Belgium", col: 74.0, rent: 32.9, pur: 133.2},
+{n: "Essen, Germany", col: 74.0, rent: 17.8, pur: 141.9},
+{n: "Saint Louis, MO, United States", col: 73.8, rent: 28.4, pur: 154.7},
+{n: "Darmstadt, Germany", col: 73.8, rent: 28.0, pur: 138.3},
+{n: "Cologne, Germany", col: 73.7, rent: 28.2, pur: 134.2},
+{n: "Greenville, SC, United States", col: 73.6, rent: 39.4, pur: 142.7},
+{n: "Baltimore, MD, United States", col: 73.6, rent: 35.1, pur: 141.4},
+{n: "Phoenix, AZ, United States", col: 73.5, rent: 39.1, pur: 138.8},
+{n: "Cork, Ireland", col: 73.5, rent: 45.3, pur: 122.3},
+{n: "Antwerp, Belgium", col: 73.4, rent: 23.7, pur: 116.3},
+{n: "Leiden, Netherlands", col: 73.3, rent: 35.6, pur: 159.7},
+{n: "Reading, United Kingdom", col: 73.1, rent: 40.1, pur: 120.9},
+{n: "Uppsala, Sweden", col: 73.0, rent: 23.8, pur: 120.3},
+{n: "Perth, Australia", col: 72.9, rent: 39.7, pur: 140.9},
+{n: "Hamburg, Germany", col: 72.9, rent: 32.3, pur: 145.3},
+{n: "Eindhoven, Netherlands", col: 72.7, rent: 36.3, pur: 143.4},
+{n: "Graz, Austria", col: 72.7, rent: 20.1, pur: 128.9},
+{n: "Adelaide, Australia", col: 72.7, rent: 35.2, pur: 131.5},
+{n: "Stuttgart, Germany", col: 72.7, rent: 29.4, pur: 167.3},
+{n: "Bristol, United Kingdom", col: 72.7, rent: 42.5, pur: 114.9},
+{n: "Dortmund, Germany", col: 72.6, rent: 19.9, pur: 147.8},
+{n: "Augsburg, Germany", col: 72.6, rent: 25.2, pur: 135.6},
+{n: "Malmo, Sweden", col: 72.4, rent: 26.6, pur: 129.0},
+{n: "Spokane, WA, United States", col: 72.2, rent: 38.2, pur: 142.0},
+{n: "Southampton, United Kingdom", col: 72.2, rent: 34.3, pur: 120.2},
+{n: "Oklahoma City, OK, United States", col: 72.2, rent: 27.6, pur: 137.8},
+{n: "Berlin, Germany", col: 72.0, rent: 36.6, pur: 130.2},
+{n: "Mainz, Germany", col: 71.8, rent: 22.9, pur: 129.2},
+{n: "Fort Worth, TX, United States", col: 71.7, rent: 36.6, pur: 145.5},
+{n: "Nuremberg, Germany", col: 71.7, rent: 23.4, pur: 147.0},
+{n: "Bremen, Germany", col: 71.6, rent: 21.8, pur: 142.8},
+{n: "Kiel, Germany", col: 71.6, rent: 19.9, pur: 142.6},
+{n: "Richmond, VA, United States", col: 71.5, rent: 35.4, pur: 148.6},
+{n: "Groningen, Netherlands", col: 71.4, rent: 27.2, pur: 128.7},
+{n: "Orlando, FL, United States", col: 71.3, rent: 42.9, pur: 142.7},
+{n: "Bonn, Germany", col: 71.2, rent: 26.9, pur: 144.5},
+{n: "Birmingham, United Kingdom", col: 71.2, rent: 31.0, pur: 136.5},
+{n: "San Juan, Puerto Rico", col: 71.1, rent: 32.4, pur: 95.3},
+{n: "Florence, Italy", col: 71.1, rent: 30.0, pur: 80.1},
+{n: "Turku, Finland", col: 71.0, rent: 20.2, pur: 120.0},
+{n: "Karlsruhe, Germany", col: 71.0, rent: 24.9, pur: 124.2},
+{n: "Toulouse, France", col: 71.0, rent: 20.8, pur: 120.0},
+{n: "Dresden, Germany", col: 70.9, rent: 19.1, pur: 138.5},
+{n: "Linz, Austria", col: 70.8, rent: 22.9, pur: 121.3},
+{n: "Brescia, Italy", col: 70.7, rent: 23.0, pur: 82.1},
+{n: "Limerick, Ireland", col: 70.7, rent: 41.5, pur: 116.6},
+{n: "Charlotte, NC, United States", col: 70.7, rent: 43.5, pur: 141.5},
+{n: "York, United Kingdom", col: 70.6, rent: 32.3, pur: 125.6},
+{n: "Bordeaux, France", col: 70.6, rent: 23.0, pur: 128.9},
+{n: "Manchester, United Kingdom", col: 70.5, rent: 39.7, pur: 117.2},
+{n: "Nashville, TN, United States", col: 70.5, rent: 48.4, pur: 141.0},
+{n: "Columbus, OH, United States", col: 70.4, rent: 34.3, pur: 141.2},
+{n: "Bologna, Italy", col: 70.3, rent: 27.0, pur: 87.4},
+{n: "Brisbane, Australia", col: 70.2, rent: 40.6, pur: 145.6},
+{n: "Hanover, Germany", col: 70.2, rent: 22.6, pur: 130.2},
+{n: "Las Vegas, NV, United States", col: 70.2, rent: 36.7, pur: 133.5},
+{n: "Tampa, FL, United States", col: 70.1, rent: 50.5, pur: 140.6},
+{n: "Mannheim, Germany", col: 70.1, rent: 22.4, pur: 184.2},
+{n: "Seoul, South Korea", col: 69.9, rent: 21.8, pur: 131.6},
+{n: "Glasgow, United Kingdom", col: 69.8, rent: 34.5, pur: 126.7},
+{n: "Victoria, Canada", col: 69.8, rent: 39.2, pur: 104.3},
+{n: "Madison, WI, United States", col: 69.7, rent: 41.3, pur: 147.0},
+{n: "Indianapolis, IN, United States", col: 69.7, rent: 36.1, pur: 148.3},
+{n: "Gothenburg, Sweden", col: 69.6, rent: 25.9, pur: 160.0},
+{n: "Pittsburgh, PA, United States", col: 69.1, rent: 34.3, pur: 152.4},
+{n: "Belfast, United Kingdom", col: 69.1, rent: 26.7, pur: 113.9},
+{n: "Leipzig, Germany", col: 69.0, rent: 21.2, pur: 127.9},
+{n: "Toronto, Canada", col: 69.0, rent: 39.2, pur: 127.8},
+{n: "Newcastle upon Tyne, United Kingdom", col: 69.0, rent: 27.6, pur: 152.5},
+{n: "Vancouver, Canada", col: 68.9, rent: 47.7, pur: 117.9},
+{n: "Leeds, United Kingdom", col: 68.8, rent: 30.3, pur: 120.2},
+{n: "Bournemouth, United Kingdom", col: 68.8, rent: 35.7, pur: 117.7},
+{n: "Milton Keynes, United Kingdom", col: 68.6, rent: 35.1, pur: 123.1},
+{n: "Liverpool, United Kingdom", col: 68.4, rent: 27.3, pur: 128.7},
+{n: "Treviso, Italy", col: 68.4, rent: 23.1, pur: 78.9},
+{n: "Lund, Sweden", col: 68.4, rent: 24.5, pur: 133.6},
+{n: "Aachen, Germany", col: 68.2, rent: 19.7, pur: 149.4},
+{n: "Cardiff, United Kingdom", col: 68.2, rent: 31.6, pur: 121.4},
+{n: "Grenoble, France", col: 67.9, rent: 19.4, pur: 127.4},
+{n: "Vancouver, WA, United States", col: 67.9, rent: 37.2, pur: 158.2},
+{n: "Erlangen, Germany", col: 67.9, rent: 22.5, pur: 193.6},
+{n: "Milwaukee, WI, United States", col: 67.7, rent: 36.1, pur: 137.7},
+{n: "Raleigh, NC, United States", col: 67.7, rent: 40.4, pur: 153.4},
+{n: "Montpellier, France", col: 67.7, rent: 21.7, pur: 119.2},
+{n: "Kansas City, MO, United States", col: 67.6, rent: 31.7, pur: 152.5},
+{n: "Lille, France", col: 67.5, rent: 21.9, pur: 136.3},
+{n: "Boise, ID, United States", col: 67.4, rent: 33.7, pur: 157.7},
+{n: "Austin, TX, United States", col: 67.4, rent: 47.4, pur: 162.3},
+{n: "Birmingham, AL, United States", col: 67.3, rent: 35.5, pur: 114.0},
+{n: "Auckland, New Zealand", col: 67.2, rent: 32.7, pur: 126.9},
+{n: "Chemnitz, Germany", col: 67.2, rent: 13.2, pur: 136.5},
+{n: "Wichita, KS, United States", col: 67.2, rent: 24.4, pur: 142.5},
+{n: "Salt Lake City, UT, United States", col: 66.9, rent: 38.5, pur: 149.3},
+{n: "Tallinn, Estonia", col: 66.9, rent: 19.8, pur: 96.4},
+{n: "Verona, Italy", col: 66.9, rent: 23.3, pur: 80.6},
+{n: "Bolzano-Bozen, Italy", col: 66.8, rent: 24.4, pur: 101.8},
+{n: "Villach, Austria", col: 66.8, rent: 19.7, pur: 124.1},
+{n: "Braunschweig, Germany", col: 66.7, rent: 18.3, pur: 191.5},
+{n: "Nottingham, United Kingdom", col: 66.6, rent: 25.4, pur: 141.0},
+{n: "Omaha, NE, United States", col: 66.6, rent: 36.2, pur: 143.5},
+{n: "Sliema, Malta", col: 66.6, rent: 39.6, pur: 70.2},
+{n: "Lethbridge, AB, Canada", col: 66.5, rent: 21.7, pur: 129.6},
+{n: "Wellington, New Zealand", col: 66.4, rent: 31.6, pur: 122.1},
+{n: "Ann Arbor, MI, United States", col: 66.4, rent: 46.4, pur: 164.8},
+{n: "Tulsa, OK, United States", col: 66.3, rent: 24.9, pur: 138.9},
+{n: "Coventry, United Kingdom", col: 66.3, rent: 30.2, pur: 129.2},
+{n: "Trento, Italy", col: 66.2, rent: 23.6, pur: 85.8},
+{n: "Padova, Italy", col: 66.2, rent: 23.2, pur: 86.0},
+{n: "Cleveland, OH, United States", col: 66.0, rent: 37.1, pur: 122.7},
+{n: "Jacksonville, FL, United States", col: 65.9, rent: 33.7, pur: 144.3},
+{n: "Rochester, NY, United States", col: 65.9, rent: 32.9, pur: 144.9},
+{n: "Kitchener, Canada", col: 65.8, rent: 30.8, pur: 120.8},
+{n: "Leuven, Belgium", col: 65.4, rent: 28.2, pur: 142.9},
+{n: "Knoxville, TN, United States", col: 65.3, rent: 38.1, pur: 127.1},
+{n: "Limassol, Cyprus", col: 65.3, rent: 37.8, pur: 103.7},
+{n: "Houston, TX, United States", col: 65.2, rent: 41.3, pur: 164.2},
+{n: "Calgary, Canada", col: 65.2, rent: 30.5, pur: 125.7},
+{n: "Guelph, Canada", col: 65.1, rent: 34.2, pur: 120.1},
+{n: "St. John's, Newfoundland and Labrador, Canada", col: 65.0, rent: 22.4, pur: 122.6},
+{n: "San Antonio, TX, United States", col: 64.8, rent: 35.9, pur: 153.6},
+{n: "Cagliari, Italy", col: 64.8, rent: 20.6, pur: 82.0},
+{n: "Tucson, AZ, United States", col: 64.6, rent: 30.4, pur: 148.1},
+{n: "Edmonton, Canada", col: 64.4, rent: 27.1, pur: 127.7},
+{n: "Sheffield, United Kingdom", col: 64.4, rent: 25.0, pur: 140.3},
+{n: "Kelowna, Canada", col: 64.3, rent: 33.2, pur: 118.4},
+{n: "Halifax, Canada", col: 64.2, rent: 34.0, pur: 108.0},
+{n: "Genoa, Italy", col: 63.9, rent: 19.8, pur: 93.3},
+{n: "Albuquerque, NM, United States", col: 63.7, rent: 30.8, pur: 154.9},
+{n: "Ottawa, Canada", col: 63.6, rent: 33.2, pur: 159.2},
+{n: "Mississauga, Canada", col: 63.6, rent: 38.5, pur: 112.6},
+{n: "Rome, Italy", col: 63.5, rent: 34.2, pur: 85.7},
+{n: "Regina, Canada", col: 63.5, rent: 24.5, pur: 115.6},
+{n: "Saskatoon, Canada", col: 63.5, rent: 24.9, pur: 114.4},
+{n: "Trieste, Italy", col: 63.3, rent: 19.8, pur: 83.9},
+{n: "London, Canada", col: 63.2, rent: 30.0, pur: 126.1},
+{n: "Cincinnati, OH, United States", col: 63.2, rent: 37.0, pur: 149.1},
+{n: "Louisville, KY, United States", col: 63.0, rent: 30.4, pur: 158.8},
+{n: "Christchurch, New Zealand", col: 62.7, rent: 27.6, pur: 115.0},
+{n: "Columbia, SC, United States", col: 62.6, rent: 28.7, pur: 135.4},
+{n: "Turin, Italy", col: 62.4, rent: 19.8, pur: 95.2},
+{n: "Dubai, United Arab Emirates", col: 62.0, rent: 53.6, pur: 134.7},
+{n: "Barcelona, Spain", col: 61.6, rent: 35.6, pur: 98.5},
+{n: "Rimini, Italy", col: 61.3, rent: 16.8, pur: 90.9},
+{n: "Valletta, Malta", col: 61.1, rent: 34.6, pur: 89.8},
+{n: "Palma de Mallorca, Spain", col: 61.1, rent: 31.7, pur: 87.3},
+{n: "Winnipeg, Canada", col: 61.1, rent: 24.4, pur: 112.9},
+{n: "Naples, Italy", col: 61.0, rent: 25.1, pur: 79.7},
+{n: "Prague, Czech Republic", col: 60.9, rent: 31.1, pur: 99.8},
+{n: "Remagen, Germany", col: 60.8, rent: 15.5, pur: 93.3},
+{n: "Bergamo, Italy", col: 60.7, rent: 19.0, pur: 116.5},
+{n: "Reggio Nell'emilia, Italy", col: 60.6, rent: 16.6, pur: 101.0},
+{n: "Quebec City, Canada", col: 60.5, rent: 21.7, pur: 132.8},
+{n: "Montreal, Canada", col: 60.5, rent: 28.6, pur: 128.1},
+{n: "Madrid, Spain", col: 60.5, rent: 35.4, pur: 109.4},
+{n: "Hamilton, Canada", col: 60.4, rent: 31.6, pur: 118.2},
+{n: "Split, Croatia", col: 60.0, rent: 25.6, pur: 74.7},
+{n: "Huntsville, AL, United States", col: 59.9, rent: 30.0, pur: 168.9},
+{n: "Montevideo, Uruguay", col: 59.9, rent: 15.0, pur: 58.1},
+{n: "Nicosia, Cyprus", col: 59.7, rent: 21.3, pur: 83.3},
+{n: "Ljubljana, Slovenia", col: 58.7, rent: 27.0, pur: 85.8},
+{n: "Athens, Greece", col: 58.6, rent: 18.4, pur: 67.1},
+{n: "Tartu, Estonia", col: 58.4, rent: 15.3, pur: 102.4},
+{n: "Bari, Italy", col: 58.2, rent: 20.9, pur: 93.1},
+{n: "Heraklion, Greece", col: 58.1, rent: 16.4, pur: 61.7},
+{n: "Kingston, Canada", col: 57.6, rent: 31.1, pur: 131.4},
+{n: "Paphos, Cyprus", col: 57.6, rent: 29.9, pur: 99.2},
+{n: "Palermo, Italy", col: 57.2, rent: 15.4, pur: 80.8},
+{n: "Bratislava, Slovakia", col: 56.9, rent: 23.0, pur: 83.3},
+{n: "Bilbao, Spain", col: 56.8, rent: 29.6, pur: 104.1},
+{n: "Tokyo, Japan", col: 56.5, rent: 25.3, pur: 122.9},
+{n: "Larnaca, Cyprus", col: 56.5, rent: 23.8, pur: 88.8},
+{n: "Riga, Latvia", col: 55.9, rent: 14.2, pur: 86.9},
+{n: "Thessaloniki, Greece", col: 55.6, rent: 14.6, pur: 62.5},
+{n: "Lisbon, Portugal", col: 55.3, rent: 37.5, pur: 63.8},
+{n: "Taipei, Taiwan", col: 55.3, rent: 19.1, pur: 82.3},
+{n: "Rijeka, Croatia", col: 55.2, rent: 16.7, pur: 81.4},
+{n: "Ras al-Khaimah, United Arab Emirates", col: 54.9, rent: 21.7, pur: 89.9},
+{n: "Zagreb, Croatia", col: 54.6, rent: 20.5, pur: 99.3},
+{n: "San Jose, Costa Rica", col: 54.5, rent: 21.4, pur: 47.0},
+{n: "Santa Cruz de Tenerife, Spain", col: 54.5, rent: 25.2, pur: 91.9},
+{n: "Oviedo, Spain", col: 54.5, rent: 17.7, pur: 112.7},
+{n: "Brno, Czech Republic", col: 54.4, rent: 22.5, pur: 98.3},
+{n: "Warsaw, Poland", col: 54.3, rent: 28.4, pur: 102.8},
+{n: "Kaunas, Lithuania", col: 54.2, rent: 13.3, pur: 85.7},
+{n: "Vilnius, Lithuania", col: 53.9, rent: 19.5, pur: 98.2},
+{n: "Catania, Italy", col: 53.7, rent: 14.5, pur: 110.3},
+{n: "Abu Dhabi, United Arab Emirates", col: 53.5, rent: 44.7, pur: 102.7},
+{n: "Kosice, Slovakia", col: 53.3, rent: 23.0, pur: 76.4},
+{n: "Valencia, Spain", col: 53.3, rent: 29.2, pur: 101.6},
+{n: "Budapest, Hungary", col: 53.1, rent: 21.0, pur: 87.4},
+{n: "Alicante, Spain", col: 52.8, rent: 22.6, pur: 104.3},
+{n: "Malaga, Spain", col: 52.6, rent: 30.2, pur: 82.4},
+{n: "Doha, Qatar", col: 52.4, rent: 46.2, pur: 115.9},
+{n: "Plzen, Czech Republic", col: 52.3, rent: 15.3, pur: 114.1},
+{n: "Monterrey, Mexico", col: 52.2, rent: 23.9, pur: 51.8},
+{n: "New Taipei City, Taiwan", col: 51.8, rent: 16.8, pur: 73.8},
+{n: "Krakow (Cracow), Poland", col: 51.5, rent: 22.2, pur: 104.1},
+{n: "Sharjah, United Arab Emirates", col: 51.4, rent: 22.9, pur: 124.8},
+{n: "Wroclaw, Poland", col: 51.4, rent: 21.2, pur: 99.5},
+{n: "Las Palmas de Gran Canaria, Spain", col: 51.3, rent: 22.6, pur: 93.4},
+{n: "Ostrava, Czech Republic", col: 51.2, rent: 16.1, pur: 95.8},
+{n: "Gdansk, Poland", col: 51.1, rent: 21.6, pur: 98.2},
+{n: "Porto, Portugal", col: 51.0, rent: 29.9, pur: 73.3},
+{n: "Tirana, Albania", col: 50.8, rent: 17.9, pur: 45.8},
+{n: "Seville (Sevilla), Spain", col: 50.7, rent: 21.1, pur: 98.8},
+{n: "Buenos Aires, Argentina", col: 50.5, rent: 17.3, pur: 44.8},
+{n: "Beirut, Lebanon", col: 50.5, rent: 19.3, pur: 33.0},
+{n: "Budva, Montenegro", col: 50.4, rent: 20.8, pur: 55.9},
+{n: "Granada, Spain", col: 50.2, rent: 18.4, pur: 108.8},
+{n: "Moscow, Russia", col: 50.1, rent: 34.1, pur: 79.1},
+{n: "Pecs, Hungary", col: 50.1, rent: 13.4, pur: 58.0},
+{n: "Belgrade, Serbia", col: 49.5, rent: 21.7, pur: 64.9},
+{n: "Lodz, Poland", col: 49.2, rent: 15.4, pur: 98.4},
+{n: "Al Khobar, Saudi Arabia", col: 49.2, rent: 15.4, pur: 111.8},
+{n: "Riyadh, Saudi Arabia", col: 49.1, rent: 24.9, pur: 117.2},
+{n: "Funchal, Portugal", col: 49.0, rent: 36.3, pur: 62.1},
+{n: "Olomouc, Czech Republic", col: 48.9, rent: 17.4, pur: 92.1},
+{n: "Braga, Portugal", col: 48.9, rent: 21.0, pur: 71.5},
+{n: "Mexico City, Mexico", col: 48.5, rent: 28.4, pur: 52.1},
+{n: "Coimbra, Portugal", col: 48.3, rent: 20.1, pur: 77.1},
+{n: "Poznan, Poland", col: 48.1, rent: 19.2, pur: 102.1},
+{n: "Taichung, Taiwan", col: 48.1, rent: 11.8, pur: 88.7},
+{n: "Sofia, Bulgaria", col: 47.8, rent: 18.2, pur: 99.3},
+{n: "Panama City, Panama", col: 47.6, rent: 28.8, pur: 46.5},
+{n: "Szeged, Hungary", col: 47.4, rent: 10.9, pur: 81.1},
+{n: "Debrecen, Hungary", col: 47.3, rent: 15.8, pur: 72.0},
+{n: "Abidjan, Ivory Coast", col: 47.3, rent: 23.7, pur: 12.2},
+{n: "Bucharest, Romania", col: 47.0, rent: 15.1, pur: 88.5},
+{n: "Queretaro (Santiago de Querétaro), Mexico", col: 47.0, rent: 18.5, pur: 58.1},
+{n: "Cluj-Napoca, Romania", col: 46.9, rent: 17.2, pur: 84.0},
+{n: "Kuwait City, Kuwait", col: 46.9, rent: 23.1, pur: 104.9},
+{n: "Szczecin, Poland", col: 46.8, rent: 16.6, pur: 102.1},
+{n: "Varna, Bulgaria", col: 46.8, rent: 13.0, pur: 76.1},
+{n: "Caracas, Venezuela", col: 46.7, rent: 14.5, pur: 18.6},
+{n: "Vladivostok, Russia", col: 46.6, rent: 16.6, pur: 54.1},
+{n: "Manama, Bahrain", col: 46.6, rent: 22.2, pur: 128.1},
+{n: "Novi Sad, Serbia", col: 46.5, rent: 13.9, pur: 63.5},
+{n: "Katowice, Poland", col: 46.0, rent: 15.6, pur: 102.3},
+{n: "Istanbul, Turkey", col: 45.5, rent: 22.4, pur: 68.5},
+{n: "Cordoba, Argentina", col: 45.5, rent: 10.6, pur: 40.4},
+{n: "Brasov, Romania", col: 45.4, rent: 17.4, pur: 68.3},
+{n: "Kaohsiung, Taiwan", col: 45.4, rent: 11.6, pur: 92.7},
+{n: "Muscat, Oman", col: 45.3, rent: 14.7, pur: 110.9},
+{n: "Jeddah (Jiddah), Saudi Arabia", col: 45.1, rent: 13.9, pur: 132.3},
+{n: "Santiago, Chile", col: 45.0, rent: 14.8, pur: 55.3},
+{n: "Osaka, Japan", col: 44.8, rent: 18.1, pur: 126.4},
+{n: "Phuket, Thailand", col: 44.6, rent: 23.3, pur: 30.3},
+{n: "Constanta, Romania", col: 44.5, rent: 14.6, pur: 63.3},
+{n: "Sarajevo, Bosnia And Herzegovina", col: 44.2, rent: 12.1, pur: 67.6},
+{n: "Merida, Mexico", col: 43.9, rent: 16.1, pur: 36.5},
+{n: "Guadalajara, Mexico", col: 43.7, rent: 20.5, pur: 44.2},
+{n: "Ajman, United Arab Emirates", col: 43.6, rent: 36.2, pur: 107.2},
+{n: "Amman, Jordan", col: 43.6, rent: 9.3, pur: 49.4},
+{n: "Ad Dammam, Saudi Arabia", col: 43.5, rent: 12.4, pur: 133.6},
+{n: "Podgorica, Montenegro", col: 43.3, rent: 16.1, pur: 75.6},
+{n: "Pretoria, South Africa", col: 43.3, rent: 13.2, pur: 104.1},
+{n: "Yerevan, Armenia", col: 43.2, rent: 16.1, pur: 37.0},
+{n: "Bangkok, Thailand", col: 43.0, rent: 20.0, pur: 48.7},
+{n: "San Salvador, El Salvador", col: 42.8, rent: 23.1, pur: 21.5},
+{n: "Johannesburg, South Africa", col: 42.6, rent: 14.2, pur: 111.5},
+{n: "Cape Town, South Africa", col: 42.5, rent: 22.1, pur: 100.0},
+{n: "Makati, Philippines", col: 42.5, rent: 22.4, pur: 44.8},
+{n: "Timisoara, Romania", col: 42.3, rent: 11.5, pur: 91.2},
+{n: "Saint Petersburg, Russia", col: 42.3, rent: 19.5, pur: 74.4},
+{n: "Iasi, Romania", col: 41.9, rent: 11.7, pur: 77.4},
+{n: "Addis Ababa, Ethiopia", col: 41.9, rent: 21.2, pur: 11.7},
+{n: "Plovdiv, Bulgaria", col: 41.8, rent: 11.8, pur: 80.1},
+{n: "Burgas, Bulgaria", col: 41.4, rent: 12.7, pur: 72.8},
+{n: "Izmir, Turkey", col: 41.2, rent: 14.7, pur: 66.3},
+{n: "Yekaterinburg, Russia", col: 41.1, rent: 16.6, pur: 60.6},
+{n: "Aguascalientes, Mexico", col: 41.0, rent: 11.6, pur: 66.1},
+{n: "Tyumen, Russia", col: 40.9, rent: 14.4, pur: 57.8},
+{n: "Craiova, Romania", col: 40.9, rent: 12.1, pur: 78.4},
+{n: "Ankara, Turkey", col: 40.6, rent: 14.5, pur: 73.1},
+{n: "Santo Domingo, Dominican Republic", col: 40.2, rent: 15.3, pur: 40.7},
+{n: "Windhoek, Namibia", col: 40.1, rent: 15.3, pur: 72.1},
+{n: "Bursa, Turkey", col: 39.9, rent: 10.2, pur: 87.1},
+{n: "Antalya, Turkey", col: 39.9, rent: 12.4, pur: 65.5},
+{n: "Galati, Romania", col: 39.9, rent: 11.0, pur: 68.9},
+{n: "Sao Paulo, Brazil", col: 39.8, rent: 17.1, pur: 52.7},
+{n: "Kuala Lumpur, Malaysia", col: 39.6, rent: 14.2, pur: 108.9},
+{n: "Kaliningrad, Russia", col: 39.6, rent: 11.0, pur: 58.0},
+{n: "Shanghai, China", col: 39.3, rent: 22.1, pur: 98.7},
+{n: "Targu Mures, Romania", col: 39.2, rent: 9.6, pur: 86.5},
+{n: "Pattaya, Thailand", col: 39.0, rent: 16.0, pur: 33.0},
+{n: "Skopje, North Macedonia", col: 39.0, rent: 9.5, pur: 67.3},
+{n: "Oradea, Romania", col: 38.8, rent: 8.6, pur: 78.3},
+{n: "Sibiu, Romania", col: 38.8, rent: 12.0, pur: 89.9},
+{n: "Nis, Serbia", col: 38.7, rent: 8.5, pur: 68.5},
+{n: "Krasnoyarsk, Russia", col: 38.6, rent: 8.9, pur: 63.4},
+{n: "Harare, Zimbabwe", col: 38.6, rent: 11.7, pur: 28.0},
+{n: "Kazan, Russia", col: 38.5, rent: 13.6, pur: 62.3},
+{n: "Phnom Penh, Cambodia", col: 38.3, rent: 14.1, pur: 25.1},
+{n: "Chisinau, Moldova", col: 38.2, rent: 15.8, pur: 57.9},
+{n: "Shenzhen, China", col: 38.0, rent: 19.0, pur: 107.0},
+{n: "Nizhny Novgorod, Russia", col: 37.9, rent: 12.9, pur: 59.5},
+{n: "Ufa, Russia", col: 37.9, rent: 10.4, pur: 61.3},
+{n: "Beijing, China", col: 37.9, rent: 23.4, pur: 93.3},
+{n: "Tbilisi, Georgia", col: 37.8, rent: 15.8, pur: 44.3},
+{n: "Krasnodar, Russia", col: 37.7, rent: 11.9, pur: 63.4},
+{n: "Novosibirsk, Russia", col: 37.6, rent: 12.5, pur: 63.2},
+{n: "Mersin, Turkey", col: 37.4, rent: 9.2, pur: 55.1},
+{n: "Samara, Russia", col: 37.4, rent: 11.1, pur: 65.9},
+{n: "Eskisehir, Turkey", col: 37.3, rent: 10.1, pur: 88.0},
+{n: "Voronezh, Russia", col: 37.2, rent: 9.8, pur: 61.5},
+{n: "Guayaquil, Ecuador", col: 37.1, rent: 11.0, pur: 41.7},
+{n: "Tomsk, Russia", col: 37.0, rent: 10.7, pur: 61.1},
+{n: "Accra, Ghana", col: 37.0, rent: 11.1, pur: 12.2},
+{n: "Suzhou, China", col: 36.9, rent: 10.6, pur: 106.4},
+{n: "Rostov-on-Don (Rostov-na-donu), Russia", col: 36.7, rent: 11.1, pur: 66.5},
+{n: "Durban, South Africa", col: 36.6, rent: 11.4, pur: 103.3},
+{n: "Chelyabinsk, Russia", col: 36.6, rent: 10.4, pur: 50.2},
+{n: "Colombo, Sri Lanka", col: 36.6, rent: 10.5, pur: 18.6},
+{n: "Tangier, Morocco", col: 36.4, rent: 11.2, pur: 41.1},
+{n: "Florianopolis, Brazil", col: 36.3, rent: 14.3, pur: 58.0},
+{n: "Medellin, Colombia", col: 36.1, rent: 15.0, pur: 40.0},
+{n: "Bali, Indonesia", col: 36.1, rent: 32.2, pur: 12.5},
+{n: "Kuching, Malaysia", col: 36.1, rent: 8.2, pur: 50.7},
+{n: "Casablanca, Morocco", col: 36.0, rent: 12.8, pur: 43.7},
+{n: "Guangzhou, China", col: 35.9, rent: 12.9, pur: 109.5},
+{n: "Manila, Philippines", col: 35.9, rent: 16.4, pur: 35.3},
+{n: "Lima, Peru", col: 35.8, rent: 14.0, pur: 48.8},
+{n: "Campinas, Brazil", col: 35.7, rent: 10.6, pur: 50.8},
+{n: "Hangzhou, China", col: 35.7, rent: 13.2, pur: 101.8},
+{n: "Chiang Mai, Thailand", col: 35.6, rent: 10.8, pur: 53.1},
+{n: "Ulaanbaatar, Mongolia", col: 35.4, rent: 17.6, pur: 42.3},
+{n: "Hua Hin, Thailand", col: 35.4, rent: 15.9, pur: 36.8},
+{n: "Almaty, Kazakhstan", col: 35.4, rent: 16.6, pur: 54.1},
+{n: "Barranquilla, Colombia", col: 35.4, rent: 9.3, pur: 41.3},
+{n: "Joao Pessoa, Brazil", col: 35.3, rent: 8.0, pur: 42.6},
+{n: "Rio de Janeiro, Brazil", col: 35.1, rent: 12.7, pur: 38.8},
+{n: "Brasilia, Brazil", col: 35.0, rent: 11.7, pur: 60.7},
+{n: "Penang, Malaysia", col: 34.8, rent: 8.6, pur: 88.8},
+{n: "Erbil (Irbil), Iraq", col: 34.8, rent: 9.5, pur: 46.5},
+{n: "Perm, Russia", col: 34.7, rent: 11.0, pur: 66.9},
+{n: "Bogota, Colombia", col: 34.7, rent: 13.3, pur: 40.6},
+{n: "Porto Alegre, Brazil", col: 34.6, rent: 9.5, pur: 44.0},
+{n: "Rabat, Morocco", col: 34.6, rent: 12.6, pur: 58.2},
+{n: "Quito, Ecuador", col: 34.6, rent: 10.4, pur: 53.9},
+{n: "Baghdad, Iraq", col: 34.5, rent: 10.9, pur: 51.2},
+{n: "Fortaleza, Brazil", col: 34.4, rent: 7.3, pur: 43.1},
+{n: "Stara Zagora, Bulgaria", col: 34.4, rent: 7.1, pur: 103.0},
+{n: "Cebu, Philippines", col: 34.1, rent: 12.6, pur: 32.5},
+{n: "Belo Horizonte, Brazil", col: 34.0, rent: 10.0, pur: 41.7},
+{n: "Damascus, Syria", col: 34.0, rent: 7.6, pur: 4.4},
+{n: "Quezon City, Philippines", col: 33.5, rent: 7.9, pur: 40.6},
+{n: "Minsk, Belarus", col: 33.4, rent: 12.3, pur: 72.5},
+{n: "Salvador, Brazil", col: 33.2, rent: 9.7, pur: 32.9},
+{n: "Curitiba, Brazil", col: 33.2, rent: 9.7, pur: 51.7},
+{n: "Agadir, Morocco", col: 32.9, rent: 8.1, pur: 50.0},
+{n: "Sousse, Tunisia", col: 32.9, rent: 6.2, pur: 37.8},
+{n: "Baku, Azerbaijan", col: 32.9, rent: 11.1, pur: 47.0},
+{n: "Kiev (Kyiv), Ukraine", col: 32.7, rent: 13.3, pur: 61.3},
+{n: "Changsha, China", col: 32.6, rent: 6.5, pur: 111.0},
+{n: "Davao, Philippines", col: 32.4, rent: 7.2, pur: 25.5},
+{n: "Marrakech, Morocco", col: 32.3, rent: 9.5, pur: 45.7},
+{n: "Cali, Colombia", col: 32.1, rent: 11.7, pur: 44.4},
+{n: "Tunis, Tunisia", col: 32.1, rent: 6.3, pur: 38.9},
+{n: "Santa Cruz, Bolivia", col: 31.9, rent: 10.3, pur: 40.7},
+{n: "Nairobi, Kenya", col: 31.8, rent: 10.9, pur: 36.1},
+{n: "Batumi, Ajara, Georgia", col: 31.3, rent: 11.3, pur: 48.9},
+{n: "Dnipro, Ukraine", col: 31.1, rent: 9.7, pur: 44.6},
+{n: "Astana (Nur-Sultan), Kazakhstan", col: 30.9, rent: 12.0, pur: 63.1},
+{n: "Nanjing, China", col: 30.9, rent: 11.1, pur: 111.3},
+{n: "Wuhan, China", col: 30.8, rent: 8.2, pur: 111.9},
+{n: "Recife, Brazil", col: 30.7, rent: 10.4, pur: 37.7},
+{n: "Asuncion, Paraguay", col: 30.6, rent: 11.3, pur: 51.1},
+{n: "Cuenca, Ecuador", col: 30.6, rent: 9.9, pur: 50.6},
+{n: "Lviv, Ukraine", col: 30.3, rent: 10.6, pur: 56.1},
+{n: "Qingdao, Shandong, China", col: 30.1, rent: 8.5, pur: 101.6},
+{n: "Jakarta, Indonesia", col: 29.9, rent: 12.0, pur: 44.7},
+{n: "Odessa (Odesa), Ukraine", col: 29.7, rent: 6.8, pur: 48.2},
+{n: "Pristina, Kosovo (Disputed Territory)", col: 29.7, rent: 8.4, pur: 67.1},
+{n: "Hanoi, Vietnam", col: 29.5, rent: 10.0, pur: 47.1},
+{n: "Tashkent, Uzbekistan", col: 29.3, rent: 12.8, pur: 53.0},
+{n: "Algiers, Algeria", col: 29.1, rent: 5.2, pur: 36.5},
+{n: "Ho Chi Minh City, Vietnam", col: 29.1, rent: 13.2, pur: 45.9},
+{n: "Bishkek, Kyrgyzstan", col: 29.0, rent: 12.5, pur: 40.1},
+{n: "Dushanbe, Tajikistan", col: 28.7, rent: 10.8, pur: 36.3},
+{n: "Chengdu, China", col: 28.6, rent: 8.8, pur: 109.1},
+{n: "Kampala, Uganda", col: 28.3, rent: 11.6, pur: 19.1},
+{n: "Chongqing, China", col: 27.9, rent: 7.9, pur: 107.3},
+{n: "Dar es Salaam, Tanzania", col: 27.7, rent: 12.5, pur: 25.1},
+{n: "Surabaya, Indonesia", col: 27.6, rent: 11.6, pur: 28.8},
+{n: "Da Nang, Vietnam", col: 27.0, rent: 10.9, pur: 33.4},
+{n: "Kharkiv, Ukraine", col: 26.8, rent: 5.3, pur: 53.7},
+{n: "Mumbai, India", col: 26.6, rent: 18.8, pur: 61.3},
+{n: "Kigali, Rwanda", col: 26.0, rent: 16.3, pur: 25.3},
+{n: "Dhaka, Bangladesh", col: 25.7, rent: 4.0, pur: 39.7},
+{n: "Gurgaon, India", col: 24.9, rent: 9.2, pur: 103.7},
+{n: "Bandung, Indonesia", col: 24.6, rent: 5.5, pur: 34.4},
+{n: "Cairo, Egypt", col: 24.2, rent: 5.9, pur: 23.8},
+{n: "Kathmandu, Nepal", col: 23.9, rent: 4.2, pur: 31.6},
+{n: "Islamabad, Pakistan", col: 23.7, rent: 5.7, pur: 37.4},
+{n: "Delhi, India", col: 23.2, rent: 7.4, pur: 68.9},
+{n: "Pune, India", col: 23.1, rent: 7.0, pur: 149.1},
+{n: "Tehran, Iran", col: 22.9, rent: 9.9, pur: 24.4},
+{n: "Bangalore, India", col: 22.2, rent: 9.2, pur: 107.1},
+{n: "Alexandria, Egypt", col: 22.1, rent: 3.3, pur: 20.5},
+{n: "Noida, India", col: 21.9, rent: 5.6, pur: 109.8},
+{n: "Hyderabad, India", col: 21.8, rent: 6.0, pur: 178.3},
+{n: "Karachi, Pakistan", col: 21.7, rent: 3.5, pur: 26.8},
+{n: "Ahmedabad, India", col: 21.5, rent: 4.4, pur: 69.5},
+{n: "Giza, Egypt", col: 21.5, rent: 4.0, pur: 20.8},
+{n: "Navi Mumbai, India", col: 21.3, rent: 8.4, pur: 89.2},
+{n: "Thane, India", col: 21.2, rent: 7.3, pur: 48.9},
+{n: "Chennai, India", col: 20.9, rent: 4.7, pur: 108.0},
+{n: "Lahore, Pakistan", col: 20.9, rent: 3.3, pur: 26.4},
+{n: "Rawalpindi, Pakistan", col: 20.8, rent: 4.2, pur: 25.5},
+{n: "Vadodara, India", col: 20.7, rent: 3.6, pur: 76.0},
+{n: "Chandigarh, India", col: 20.6, rent: 4.8, pur: 67.7},
+{n: "Kolkata, India", col: 19.8, rent: 4.1, pur: 71.8},
+{n: "Bhubaneswar, India", col: 19.7, rent: 3.8, pur: 58.6},
+{n: "Patna, India", col: 19.6, rent: 2.5, pur: 56.9},
+{n: "Kochi, India", col: 19.5, rent: 4.5, pur: 75.7},
+{n: "Bhopal, India", col: 19.0, rent: 3.3, pur: 64.6},
+{n: "Jaipur, India", col: 19.0, rent: 4.1, pur: 73.1},
+{n: "Surat, India", col: 18.9, rent: 6.9, pur: 53.7},
+{n: "Indore, India", col: 18.6, rent: 4.1, pur: 67.4},
+{n: "Lucknow (Lakhnau), India", col: 18.1, rent: 3.7, pur: 67.9},
+{n: "Coimbatore, India", col: 17.7, rent: 3.6, pur: 69.9},
+{n: "Rajkot, India", col: 17.6, rent: 3.4, pur: 50.6}
+
+                
+                // (Note: In a production app, this would be a full 514-item JSON array)
+            ];
+list.sort((a, b) => a.n.localeCompare(b.n));
+
+
+            list.forEach(item => {
+                cities[item.n.toLowerCase()] = {
+                    name: item.n,
+                    rent: (item.rent / 100) * 2500,
+                    food: (item.col / 100) * 800,
+                    transport: (item.col / 100) * 150,
+                    utilities: (item.col / 100) * 200,
+                    risk: Math.round(item.pur > 100 ? 95 : item.pur * 0.9)
+                };
+            });
+            return cities;
+        };
+
+        const CITY_DB = generateCityData();
+
+        function App() {
+            const [view, setView] = React.useState('single');
+            const [income, setIncome] = React.useState(5000);
+            const [lifestyle, setLifestyle] = React.useState('Standard');
+            const [cityA, setCityA] = React.useState("");
+            const [cityB, setCityB] = React.useState("");
+            const [isActive, setIsActive] = React.useState(false);
+
+            const multipliers = { Minimalist: 0.6, Standard: 1, Premium: 1.8 };
+
+            const getStats = (id) => {
+                if (!id) return null;
+                const city = CITY_DB[id];
+                const m = multipliers[lifestyle];
+                const costs = {
+                    rent: Math.round(city.rent * m),
+                    food: Math.round(city.food * m),
+                    transport: Math.round(city.transport * (lifestyle === 'Minimalist' ? 0.4 : m)),
+                    utilities: Math.round(city.utilities)
+                };
+                const total = costs.rent + costs.food + costs.transport + costs.utilities;
+                return { ...costs, total, surplus: income - total, risk: city.risk, rawName: city.name };
+            };
+
+            const dataA = getStats(cityA);
+            const dataB = getStats(cityB);
+            const annualSavingsDiff = (dataA && dataB) ? Math.abs(dataA.surplus - dataB.surplus) * 12 : 0;
+
+            const handleAnalyze = () => {
+                if (cityA) setIsActive(true);
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-6 md:p-12">
+                    {/* Centered Header */}
+                    <header className="flex flex-col items-center mb-12 text-center">
+                        <div className="mb-6">
+                            <h1 className="text-4xl font-extrabold text-[#2563EB] tracking-tight">ReloSmart<span className="text-slate-300">.ai</span></h1>
+                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1 italic">Relocation Intelligence System</p>
+                        </div>
+                        <div className="nav-pill flex shadow-sm">
+                            <button onClick={() => {setView('single'); setIsActive(false);}} className={`px-8 py-2 rounded-full text-xs font-bold transition ${view === 'single' ? 'bg-[#2563EB] text-white' : 'text-slate-400'}`}>Single City</button>
+                            <button onClick={() => {setView('compare'); setIsActive(false);}} className={`px-8 py-2 rounded-full text-xs font-bold transition ${view === 'compare' ? 'bg-[#2563EB] text-white' : 'text-slate-400'}`}>Compare Cities</button>
+                        </div>
+                    </header>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Configuration Sidebar */}
+                        <div className="lg:col-span-4 space-y-6">
+                            <div className="glass-card p-8 space-y-6 border-t-4 border-blue-500">
+                                <h3 className="text-[14px] font-black uppercase text-slate-800 tracking-wider mb-8">Configuration</h3>
+                                
+                                <div className="space-y-6">
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Target City</label>
+                                        <select value={cityA} onChange={(e) => {setCityA(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-sm font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-100 outline-none">
+                                            <option value="" disabled>e.g. London</option>
+                                            {Object.keys(CITY_DB).map(k => <option key={k} value={k}>{CITY_DB[k].name}</option>)}
+                                        </select>
+                                    </div>
+
+                                    {view === 'compare' && (
+                                        <div>
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Comparison City</label>
+                                            <select value={cityB} onChange={(e) => {setCityB(e.target.value); setIsActive(false);}} className="w-full p-4 bg-slate-50 border-none rounded-2xl text-sm font-bold appearance-none cursor-pointer focus:ring-2 focus:ring-blue-100 outline-none">
+                                                <option value="" disabled>Choose second city...</option>
+                                                {Object.keys(CITY_DB).map(k => <option key={k} value={k}>{CITY_DB[k].name}</option>)}
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    <button onClick={handleAnalyze} className="w-full py-4 bg-[#2563EB] text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:scale-[1.02] active:scale-95 transition-all">
+                                        Analyze Relocation
+                                    </button>
+
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Monthly Income</label>
+                                        <div className="relative">
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                                            <input type="number" value={income} onChange={(e) => setIncome(e.target.value)} className="w-full p-4 pl-8 bg-slate-50 border-none rounded-2xl text-lg font-black outline-none" />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase block mb-3">Lifestyle Mode</label>
+                                        <div className="flex bg-slate-100 p-1 rounded-2xl">
+                                            {['Minimalist', 'Standard', 'Premium'].map(l => (
+                                                <button key={l} onClick={() => setLifestyle(l)} className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition ${lifestyle === l ? 'bg-white shadow-sm text-[#2563EB]' : 'text-slate-400'}`}>{l}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Main Results Dashboard */}
+                        <div className="lg:col-span-8 h-full">
+                            {!isActive ? (
+                                /* Placeholder/Empty State from Image */
+                                <div className="placeholder-dashed h-full min-h-[500px] flex flex-col items-center justify-center text-center p-12">
+                                    <div className="mb-8 opacity-20">
+                                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="animate-pulse">
+                                            <path d="M12 3v3m0 12v3M5 12H2m20 0h-3M18.36 5.64l-2.12 2.12M7.76 16.24l-2.12 2.12M18.36 18.36l-2.12-2.12M7.76 7.76L5.64 5.64" strokeLinecap="round"/>
+                                            <circle cx="12" cy="12" r="4"/>
+                                            <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-3xl font-black text-slate-300 mb-2">Analysis Dashboard</h3>
+                                    <p className="text-slate-300 font-bold uppercase tracking-widest text-xs">Activate Relocation Mode</p>
+                                </div>
+                            ) : (
+                                /* Results Dashboard */
+                                <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                                    {view === 'compare' && dataB && (
+                                        <div className="bg-[#10B981] text-white p-5 rounded-3xl text-center shadow-lg shadow-emerald-50">
+                                            <p className="font-bold text-sm">
+                                                Verdict: {dataB.surplus > dataA.surplus ? dataB.rawName : dataA.rawName} saves you ${annualSavingsDiff.toLocaleString()} more per year!
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    <div className={`grid gap-6 ${view === 'compare' ? 'md:grid-cols-2' : 'max-w-2xl mx-auto w-full'}`}>
+                                        {[dataA, ...(view === 'compare' && dataB ? [dataB] : [])].map((city, idx) => (
+                                            <div key={idx} className="glass-card p-10 flex flex-col">
+                                                <div className="flex justify-between items-start mb-10">
+                                                    <div>
+                                                        <h2 className="text-3xl font-extrabold text-slate-800 mb-2">{city.rawName.split(',')[0]}</h2>
+                                                        <span className="bg-blue-50 text-[#2563EB] text-[10px] font-black px-3 py-1 rounded-full uppercase">Risk Score: {city.risk}/100</span>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Monthly Surplus</p>
+                                                        <p className={`text-4xl font-black ${city.surplus >= 0 ? 'text-[#10B981]' : 'text-rose-500'}`}>
+                                                            ${city.surplus.toLocaleString()}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-y-10 gap-x-12">
+                                                    <StatItem label="Rent" val={city.rent} color="#3B82F6" total={city.total} />
+                                                    <StatItem label="Food" val={city.food} color="#F59E0B" total={city.total} />
+                                                    <StatItem label="Transport" val={city.transport} color="#64748B" total={city.total} />
+                                                    <StatItem label="Utilities" val={city.utilities} color="#94A3B8" total={city.total} />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const StatItem = ({ label, val, color, total }) => (
+            <div>
+                <div className="flex justify-between text-[11px] font-bold text-slate-400 uppercase mb-3">
+                    <span>{label}</span>
+                    <span className="text-slate-800">${val.toLocaleString()}</span>
+                </div>
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div className="h-full transition-all duration-1000" style={{width: `${(val/total)*100}%`, backgroundColor: color}}></div>
+                </div>
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
